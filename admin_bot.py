@@ -285,6 +285,37 @@ async def cmd_start_account(update, context):
 
 
 @admin_only
+async def cmd_import(update, context):
+    if len(context.args) < 2:
+        await update.message.reply_text(
+            "استفاده: /importsession شماره_تلفن session_string\n"
+            "(این استرینگ رو از اجرای local_login.py روی گوشی/کامپیوتر خودت میگیری)"
+        )
+        return
+    label = context.args[0]
+    session_string = context.args[1]
+
+    client = TelegramClient(StringSession(session_string), api=make_api(label))
+    await client.connect()
+    try:
+        me = await client.get_me()
+    except Exception as e:
+        await update.message.reply_text(f"این session معتبر نیست: {e}")
+        await client.disconnect()
+        return
+
+    data["accounts"][label] = {"session": session_string, "active": True}
+    save_data()
+    await update.message.reply_text(f"اکانت {me.first_name} ({label}) اضافه شد.")
+
+    if settings["group"]:
+        start_worker(label, client)
+    else:
+        await client.disconnect()
+        await update.message.reply_text("گروه هنوز تنظیم نشده. با /setgroup تنظیمش کن.")
+
+
+@admin_only
 async def cmd_remove(update, context):
     if not context.args:
         await update.message.reply_text("استفاده: /removeaccount شماره_تلفن")
@@ -304,6 +335,7 @@ async def cmd_start(update, context):
     await update.message.reply_text(
         "دستورات:\n"
         "/addaccount - اضافه کردن اکانت جدید با شماره تلفن\n"
+        "/importsession شماره session_string - اضافه کردن اکانتی که لوکال لاگین کردی\n"
         "/setgroup - تنظیم گروه مقصد\n"
         "/setinterval min max - تنظیم فاصله زمانی (ثانیه)\n"
         "/setmessage - تنظیم متن پیام\n"
@@ -340,6 +372,7 @@ def main():
     app.add_handler(CommandHandler("stopaccount", cmd_stop))
     app.add_handler(CommandHandler("startaccount", cmd_start_account))
     app.add_handler(CommandHandler("removeaccount", cmd_remove))
+    app.add_handler(CommandHandler("importsession", cmd_import))
 
     app.run_polling()
 
