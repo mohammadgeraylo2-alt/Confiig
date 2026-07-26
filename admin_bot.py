@@ -1,13 +1,13 @@
 """
 ربات ادمین برای مدیریت چند سلف‌بات تلگرام
 --------------------------------------------
-این نسخه از کتابخونه opentele استفاده می‌کنه که API رسمی اپ اندروید تلگرام
+این نسخه از کتابخونه opentele2 استفاده می‌کنه که API رسمی اپ اندروید تلگرام
 رو همراه خودش داره، پس دیگه لازم نیست از my.telegram.org چیزی بگیری.
 
 فقط خود تو (ADMIN_ID) میتونی به این ربات دستور بدی.
 
 نیازمندی:
-    pip install python-telegram-bot opentele --break-system-packages
+    pip install python-telegram-bot opentele2 --break-system-packages
 
 Environment Variables لازم:
     BOT_TOKEN  -> توکن ربات از @BotFather
@@ -21,8 +21,8 @@ import os
 import random
 from pathlib import Path
 
-from opentele.tl import TelegramClient
-from opentele.api import API
+from opentele2.tl import TelegramClient
+from opentele2.api import API
 from telethon.sessions import StringSession
 from telethon.errors import SessionPasswordNeededError
 
@@ -346,3 +346,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
