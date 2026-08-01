@@ -784,7 +784,7 @@ async def casino_loop(label, client):
         await asyncio.sleep(max(CASINO_INTERVAL - elapsed, 30))
 
 
-CASINO_BET_AMOUNT = "10k"  # مبلغ پیش‌فرض ورودی گردونه شانس
+CASINO_BET_AMOUNT = "20k"  # مبلغ پیش‌فرض ورودی گردونه شانس
 
 
 async def run_casino_cycle(label, client):
